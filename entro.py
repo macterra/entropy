@@ -24,13 +24,24 @@ def evolve(grid):
     return next
 
 stds = []
-vars = []
 for i in range(1000):
     grid = evolve(grid)
+    sall = np.std(grid)
+    q = size//2
+    nw = grid[:q,:q]
+    ne = grid[:q,q:size]
+    sw = grid[q:size,:q]
+    se = grid[q:size,q:size]
     stds.append(np.std(grid))
-    vars.append(np.var(grid))
-    print(i, stds[i]/mean)
+    mnw = np.mean(nw)
+    mne = np.mean(ne)
+    msw = np.mean(sw)
+    mse = np.mean(se)
+    qsd = np.std([mnw, mne, msw, mse])
+    print(f'{i:4d} {stds[i]/mean:10.4f} {mnw:10.4f} {mne:10.4f} {msw:10.4f} {mse:10.4f} {qsd:10.4f}')
     print(grid)
+    if qsd < 1:
+        break
 
 def analyze(data, window):
     for i in range(len(data)-window):
@@ -39,4 +50,4 @@ def analyze(data, window):
         z = s/m
         print(f'{i:4d} {data[i]:10.4f} {m:10.4f} {s:10.4f} {z:10.4f}')
 
-analyze(stds, 100)
+#analyze(stds, 100)
