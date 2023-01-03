@@ -1,11 +1,10 @@
 import numpy as np
 import random
 
-size = 10
+size = 16
+mean = 100
 grid = np.full((size,size), 0)
 grid[0,0] = size*size*100
-
-print(grid)
 
 def evolve(grid):
     rows, cols = grid.shape
@@ -24,16 +23,20 @@ def evolve(grid):
                     next[i,j] += 1
     return next
 
+stds = []
 vars = []
 for i in range(1000):
     grid = evolve(grid)
+    stds.append(np.std(grid))
     vars.append(np.var(grid))
-    print(i, vars[-1])
+    print(i, stds[i]/mean)
     print(grid)
 
-for i in range(len(vars)):
-    print(i, vars[i])
+def analyze(data, window):
+    for i in range(len(data)-window):
+        m = np.mean(data[i:i+window])
+        s = np.std(data[i:i+window])
+        z = s/m
+        print(f'{i:4d} {data[i]:10.4f} {m:10.4f} {s:10.4f} {z:10.4f}')
 
-window = 100
-for i in range(len(vars)-window):
-    print(i, np.var(vars[i:i+window]))
+analyze(stds, 100)
