@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 size = 16
 mean = 100
@@ -24,6 +25,8 @@ def evolve(grid):
     return next
 
 stds = []
+deltap = []
+
 for i in range(1000):
     grid = evolve(grid)
     sall = np.std(grid)
@@ -38,10 +41,16 @@ for i in range(1000):
     msw = np.mean(sw)
     mse = np.mean(se)
     qsd = np.std([mnw, mne, msw, mse])
+    deltap.append(qsd)
     print(f'{i:4d} {stds[i]/mean:10.4f} {mnw:10.4f} {mne:10.4f} {msw:10.4f} {mse:10.4f} {qsd:10.4f}')
     print(grid)
     if qsd < 1:
         break
+
+def plotData(data):
+    fig, ax = plt.subplots()
+    ax.plot(data)
+    plt.show()
 
 def analyze(data, window):
     for i in range(len(data)-window):
@@ -51,3 +60,4 @@ def analyze(data, window):
         print(f'{i:4d} {data[i]:10.4f} {m:10.4f} {s:10.4f} {z:10.4f}')
 
 #analyze(stds, 100)
+plotData(deltap)
