@@ -26,6 +26,7 @@ def evolve(grid):
 
 stds = []
 deltap = []
+j = 0
 
 for i in range(1000):
     grid = evolve(grid)
@@ -44,12 +45,13 @@ for i in range(1000):
     deltap.append(qsd)
     print(f'{i:4d} {stds[i]/mean:10.4f} {mnw:10.4f} {mne:10.4f} {msw:10.4f} {mse:10.4f} {qsd:10.4f}')
     print(grid)
-    if qsd < 1:
-        break
+    if qsd < 1 and j == 0:
+        j = i
+        #break
 
 def plotData(data):
     fig, ax = plt.subplots()
-    ax.plot(data)
+    ax.plot(data[j:])
     plt.show()
 
 def analyze(data, window):
